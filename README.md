@@ -9,4 +9,4 @@ Create an application wich will contains:
   c) table/list - which allows the user to see the result of computation in real time.
 3) unit tests for all classes (except on android one: activities, fragments, services, apis)
 4) integration tests for all UI classes: activities, fragments
-5) the computation logic - count wourd count in text file which was provided by user with url.
+5) the computation logic - calculate wourd counts in a text file which was provided by user with url.
