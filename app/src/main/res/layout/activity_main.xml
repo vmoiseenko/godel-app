@@ -19,8 +19,7 @@
             android:id="@+id/url_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textWebEditText"
-            />
+            android:inputType="textWebEditText" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -28,12 +27,27 @@
         android:id="@+id/actionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main.action_button_text"
         android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="@id/textInputUrl"
-        app:layout_constraintTop_toBottomOf="@id/textInputUrl"
         android:enabled="false"
-        />
+        android:text="@string/main.action_button_text"
+        app:layout_constraintLeft_toLeftOf="@id/textInputUrl"
+        app:layout_constraintTop_toBottomOf="@id/textInputUrl" />
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/actionButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/actionButton"
+        app:layout_constraintTop_toTopOf="@+id/actionButton" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/resultListRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/actionButton"
+        />
 
 </android.support.constraint.ConstraintLayout>

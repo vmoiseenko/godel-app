@@ -1,9 +1,31 @@
 package com.godeltech.simpleapp.ui.main
 
-class MainPresenter: MainContract.Presenter {
+import android.os.Handler
+
+
+class MainPresenter : MainContract.Presenter {
+
+    lateinit var view: MainContract.View
 
     override fun attach(view: MainContract.View) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.view = view
     }
+
+    override fun detach() {
+    }
+
+    override fun onActionButtonClick() {
+        view.showProgress()
+        val handler = Handler()
+
+        handler.postDelayed({view.hideProgress()}, 2000)
+
+//        runBlocking {
+//            delay(2000)
+//            view.hideProgress()
+//        }
+    }
+
+
 
 }
