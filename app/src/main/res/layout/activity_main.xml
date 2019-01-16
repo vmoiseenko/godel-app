@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/url_field"
+            android:id="@+id/urlField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textWebEditText" />
@@ -47,7 +47,8 @@
         android:id="@+id/resultListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/actionButton"
-        />
+        android:orientation="vertical"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/actionButton" />
 
 </android.support.constraint.ConstraintLayout>
