@@ -2,13 +2,13 @@ package com.godeltech.simpleapp.ui.main
 
 import android.annotation.SuppressLint
 import android.util.Patterns
-import com.godeltech.simpleapp.BaseApplication
 import com.godeltech.simpleapp.repository.DataRepositoryProvider
-import com.godeltech.simpleapp.utils.FileUtils
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
-import java.io.File
+import okio.BufferedSource
+import java.io.IOException
 
 class MainPresenter : MainContract.Presenter {
 
@@ -38,40 +38,61 @@ class MainPresenter : MainContract.Presenter {
     @SuppressLint("CheckResult")
     fun requestData(url: String) {
         //http://25.io/toau/audio/sample.txt
-
+        //https://norvig.com/big.txt
         onProgressShow()
         val dataRepository = DataRepositoryProvider.provideDataRepository()
-
+        val wordsMap: HashMap<String, Int> = HashMap()
         dataRepository.getTextFile(url)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                { response: ResponseBody? ->
-                    FileUtils.writeResponseBodyToDisk(getFilePath(), response)
-                    val text = openFileAsText(getFilePath())
-                    val wordGroups = calculateWordsInFile(text)
-                    publishResult(wordGroups)
-                    onProgressHide()
-                },
-                { error ->
-                    onProgressHide()
+            .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
+            .doOnComplete {
+                onProgressHide()
+                publishResult(wordsMap.toList().sortedByDescending { it.second })
+            }
+            .doOnError { error ->
+                run {
                     view.showError(error)
-                })
+                    onProgressHide()
+                }
+            }
+            .subscribe { text: String ->
+                run {
+                    val tempMap = calculateWordsInText(text)
+                    tempMap.keys.forEach {
+                        if (wordsMap.containsKey(it))
+                            wordsMap[it] = wordsMap[it]!! + tempMap[it]!!
+                        else
+                            wordsMap[it] = tempMap[it]!!
+                    }
+                }
+            }
 
     }
 
-    private fun openFileAsText(filePath: String): String {
-        return File(filePath).readText().toLowerCase()
+    private fun readStream(source: BufferedSource): Observable<String> {
+        return Observable
+            .create { emitter ->
+                try {
+                    while (!source.exhausted()) {
+                        emitter.onNext(source.readUtf8Line()!!)
+                    }
+                    emitter.onComplete()
+
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    emitter.onError(e)
+                }
+            }
     }
 
     @Suppress("UnnecessaryVariable")
-    private fun calculateWordsInFile(text: String): List<Pair<String, Int>> {
+    private fun calculateWordsInText(text: String): Map<String, Int> {
         val r = Regex("""\p{javaLowerCase}+""")
-        val matches = r.findAll(text)
+        val matches = r.findAll(text.toLowerCase())
         val wordGroups = matches.map { it.value }
             .groupBy { it }
-            .map { Pair(it.key, it.value.size) }
-            .sortedByDescending { it.second }
+            .mapValues { it.key; it.value.size }
 
         return wordGroups
     }
@@ -90,10 +111,6 @@ class MainPresenter : MainContract.Presenter {
         view.hideProgress()
         view.setUrlTextFieldEnabled(true)
         view.setActionButtonEnabled(true)
-    }
-
-    private fun getFilePath(): String {
-        return BaseApplication.appContext?.getExternalFilesDir(null).toString() + File.separator + "file.txt"
     }
 
 }
