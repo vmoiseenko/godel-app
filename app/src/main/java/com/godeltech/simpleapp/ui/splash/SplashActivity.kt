@@ -2,25 +2,31 @@ package com.godeltech.simpleapp.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.ui.main.MainActivity
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 
-class SplashActivity : AppCompatActivity()  {
+class SplashActivity : AppCompatActivity() {
 
-    val SPLASH_DELAY: Long = 5000
+    val SPLASH_DELAY: Long = 0
     var isPaused: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-//        runBlocking {
-//            delay(SPLASH_DELAY)
-//        }
-
-        launchApp()
+        Observable
+            .timer(SPLASH_DELAY, TimeUnit.SECONDS)
+            .doOnNext { launchApp() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe()
 
     }
 
@@ -35,7 +41,7 @@ class SplashActivity : AppCompatActivity()  {
     }
 
     private fun launchApp() {
-        if(!isPaused && !isDestroyed){
+        if (!isPaused && !isDestroyed) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

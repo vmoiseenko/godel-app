@@ -2,21 +2,19 @@ package com.godeltech.simpleapp.ui.main
 
 import com.godeltech.simpleapp.ui.base.BaseContract
 
-class MainContract{
+class MainContract {
 
-    interface View: BaseContract.View{
+    interface View : BaseContract.View {
         fun showProgress()
         fun hideProgress()
-        fun setTextFieldState(isEnabled: Boolean)
-        fun setActionButtonState(isEnabled: Boolean)
-        fun updateListData(pair: Pair<String, String>)
-        fun getFilePath(): String
-        fun onError(t: Throwable)
+        fun setUrlTextFieldEnabled(isEnabled: Boolean)
+        fun setActionButtonEnabled(isEnabled: Boolean)
+        fun addListData(list: List<Pair<String, Int>>)
+        fun showError(t: Throwable)
     }
 
-    interface Presenter: BaseContract.Presenter<MainContract.View>{
-        fun isUrlValid(url: String): Boolean
-        fun requestData(url: String)
-        fun calculateWordsInFile(filePath: String): Int
+    interface Presenter : BaseContract.Presenter<MainContract.View> {
+        fun onActionButtonClick()
+        fun onUrlTextChanged(url: String)
     }
 }

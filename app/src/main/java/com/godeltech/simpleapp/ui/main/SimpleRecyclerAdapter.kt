@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.godeltech.simpleapp.R
 
-class SimpleRecyclerAdapter(val data: ArrayList<Pair<String, String>>) :
+class SimpleRecyclerAdapter(val data: ArrayList<Pair<String, Int>> = mutableListOf<ArrayList<Pair<String, Int>>>() as ArrayList<Pair<String, Int>>) :
 
     RecyclerView.Adapter<SimpleRecyclerAdapter.SimpleViewHolder>() {
 
     class SimpleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bindData(pair: Pair<String, String>) {
-            (itemView.findViewById(R.id.title) as TextView).text = pair.first
-            (itemView.findViewById(R.id.shortcut) as TextView).text = pair.second
+        fun bindData(pair: Pair<String, Int>) {
+            itemView.findViewById<TextView>(R.id.title).text = pair.first
+            itemView.findViewById<TextView>(R.id.shortcut).text = pair.second.toString()
         }
 
     }

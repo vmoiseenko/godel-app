@@ -8,7 +8,6 @@ import android.widget.Toast
 import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.utils.SimpleTextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
@@ -21,28 +20,28 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
 
         presenter = MainPresenter()
-        presenter.attach(this)
 
-        recyclerAdapter = SimpleRecyclerAdapter(ArrayList())
+        recyclerAdapter = SimpleRecyclerAdapter()
         resultListRecycler.adapter = recyclerAdapter
 
         urlField.addTextChangedListener(object : SimpleTextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                setActionButtonState(presenter.isUrlValid(s.toString()))
+                presenter.onUrlTextChanged(s.toString())
             }
         })
 
-        actionButton.setOnClickListener { presenter.requestData(urlField.text.toString()) }
+        actionButton.setOnClickListener { presenter.onActionButtonClick() }
 
+        presenter.attach(this)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         presenter.detach()
+        super.onDestroy()
     }
 
-    override fun updateListData(pair: Pair<String, String>) {
-        recyclerAdapter.data.add(pair)
+    override fun addListData(list: List<Pair<String, Int>>) {
+        recyclerAdapter.data.addAll(list)
         recyclerAdapter.notifyDataSetChanged()
     }
 
@@ -54,19 +53,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         progress.visibility = View.GONE
     }
 
-    override fun setActionButtonState(isEnabled: Boolean) {
+    override fun setActionButtonEnabled(isEnabled: Boolean) {
         actionButton.isEnabled = isEnabled
     }
 
-    override fun setTextFieldState(isEnabled: Boolean) {
+    override fun setUrlTextFieldEnabled(isEnabled: Boolean) {
         urlField.isEnabled = isEnabled
     }
 
-    override fun getFilePath(): String {
-        return getExternalFilesDir(null).toString() + File.separator + "file.txt"
-    }
-
-    override fun onError(t: Throwable) {
+    override fun showError(t: Throwable) {
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }
 }
