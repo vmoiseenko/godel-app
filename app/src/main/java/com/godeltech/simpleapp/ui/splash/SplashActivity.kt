@@ -2,7 +2,6 @@ package com.godeltech.simpleapp.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.ui.main.MainActivity

@@ -2,7 +2,7 @@ package com.godeltech.simpleapp.ui.main
 
 import android.annotation.SuppressLint
 import android.util.Patterns
-import com.godeltech.simpleapp.repository.DataRepositoryProvider
+import com.godeltech.simpleapp.repository.DataRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -10,7 +10,7 @@ import okhttp3.ResponseBody
 import okio.BufferedSource
 import java.io.IOException
 
-class MainPresenter : MainContract.Presenter {
+class MainPresenter(private val dataRepository: DataRepository) : MainContract.Presenter {
 
     private lateinit var view: MainContract.View
     private var url: String = String()
@@ -40,7 +40,6 @@ class MainPresenter : MainContract.Presenter {
         //http://25.io/toau/audio/sample.txt
         //https://norvig.com/big.txt
         onProgressShow()
-        val dataRepository = DataRepositoryProvider.provideDataRepository()
         val wordsMap: HashMap<String, Int> = HashMap()
         dataRepository.getTextFile(url)
             .observeOn(AndroidSchedulers.mainThread())
