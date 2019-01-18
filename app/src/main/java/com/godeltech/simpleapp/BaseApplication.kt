@@ -1,17 +1,26 @@
 package com.godeltech.simpleapp
 
 import android.app.Application
-import android.content.Context
+import com.godeltech.simpleapp.di.component.AppComponent
+import com.godeltech.simpleapp.di.component.DaggerAppComponent
+import com.godeltech.simpleapp.di.module.AppModule
 
 class BaseApplication : Application() {
 
+    private lateinit var component: AppComponent
+
     override fun onCreate() {
         super.onCreate()
-        appContext = applicationContext
+        setup()
     }
 
-    companion object {
-        var appContext: Context? = null
-            private set
+    fun setup() {
+        component = DaggerAppComponent.builder()
+            .appModule(AppModule(this)).build()
     }
+
+    fun getAppComponent(): AppComponent {
+        return component
+    }
+
 }

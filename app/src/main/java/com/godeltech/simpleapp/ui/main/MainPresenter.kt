@@ -59,15 +59,20 @@ class MainPresenter : MainContract.Presenter {
             .subscribe { text: String ->
                 run {
                     val tempMap = calculateWordsInText(text)
-                    tempMap.keys.forEach {
-                        if (wordsMap.containsKey(it))
-                            wordsMap[it] = wordsMap[it]!! + tempMap[it]!!
-                        else
-                            wordsMap[it] = tempMap[it]!!
-                    }
+                    mergeMaps(tempMap, wordsMap)
                 }
             }
 
+    }
+
+    private fun mergeMaps(firstMap: Map<String, Int>, secondMap: HashMap<String, Int>): HashMap<String, Int> {
+        firstMap.keys.forEach {
+            if (secondMap.containsKey(it))
+                secondMap[it] = secondMap[it]!! + firstMap[it]!!
+            else
+                secondMap[it] = firstMap[it]!!
+        }
+        return secondMap
     }
 
     private fun readStream(source: BufferedSource): Observable<String> {

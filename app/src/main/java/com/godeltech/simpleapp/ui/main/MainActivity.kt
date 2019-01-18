@@ -6,23 +6,22 @@ import android.text.Editable
 import android.view.View
 import android.widget.Toast
 import com.godeltech.simpleapp.R
+import com.godeltech.simpleapp.di.component.DaggerMainActivityComponent
+import com.godeltech.simpleapp.di.module.MainActivityModule
 import com.godeltech.simpleapp.utils.SimpleTextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
-    lateinit var presenter: MainPresenter
-
-    private lateinit var recyclerAdapter: SimpleRecyclerAdapter
+    @Inject lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        injectDependency()
 
-        presenter = MainPresenter()
-
-        recyclerAdapter = SimpleRecyclerAdapter()
-        resultListRecycler.adapter = recyclerAdapter
+        resultListRecycler.adapter = SimpleRecyclerAdapter()
 
         urlField.addTextChangedListener(object : SimpleTextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -35,12 +34,23 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter.attach(this)
     }
 
+    private fun injectDependency() {
+//        val baseApplication = applicationContext as BaseApplication
+
+        val activityComponent = DaggerMainActivityComponent.builder()
+            .mainActivityModule(MainActivityModule(this))
+            .build()
+
+        activityComponent.inject(this)
+    }
+
     override fun onDestroy() {
         presenter.detach()
         super.onDestroy()
     }
 
     override fun addListData(list: List<Pair<String, Int>>) {
+        val recyclerAdapter: SimpleRecyclerAdapter = resultListRecycler.adapter as SimpleRecyclerAdapter
         recyclerAdapter.data.addAll(list)
         recyclerAdapter.notifyDataSetChanged()
     }
