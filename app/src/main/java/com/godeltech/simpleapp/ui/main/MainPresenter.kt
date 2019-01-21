@@ -15,6 +15,7 @@ class MainPresenter(private val dataRepository: DataRepository) : MainContract.P
     }
 
     override fun detach() {
+        interactor.unsubscribe()
     }
 
     override fun onUrlTextChanged(url: String) {

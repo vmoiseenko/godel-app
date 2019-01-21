@@ -1,10 +1,10 @@
 package com.godeltech.simpleapp.ui.main
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.godeltech.simpleapp.repository.DataRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import okio.BufferedSource
@@ -15,10 +15,17 @@ class MainInteractor(var presenter: MainPresenter, private var dataRepository: D
     lateinit var url: String
     private val wordsMap: HashMap<String, Int> = hashMapOf()
 
+    lateinit var disposable: Disposable
+
+    fun unsubscribe(){
+        if(::disposable.isInitialized)
+            disposable.dispose()
+    }
+
     @SuppressLint("CheckResult")
     fun requestData() {
 
-        dataRepository.getTextFile(url)
+        disposable = dataRepository.getTextFile(url)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
