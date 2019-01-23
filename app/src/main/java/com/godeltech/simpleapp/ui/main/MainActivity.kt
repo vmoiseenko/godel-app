@@ -1,7 +1,6 @@
 package com.godeltech.simpleapp.ui.main
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.view.View
 import android.widget.Toast
@@ -9,19 +8,19 @@ import com.godeltech.simpleapp.BaseApplication
 import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.di.component.DaggerMainActivityComponent
 import com.godeltech.simpleapp.di.module.MainActivityModule
+import com.godeltech.simpleapp.ui.base.BaseActivity
 import com.godeltech.simpleapp.utils.SimpleTextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.View {
+class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
 
     @Inject
-    lateinit var presenter: MainContract.Presenter
+    lateinit var mainPresenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        injectDependency()
 
         resultListRecycler.adapter = SimpleRecyclerAdapter()
 
@@ -32,11 +31,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         })
 
         actionButton.setOnClickListener { presenter.onActionButtonClick() }
-
-        presenter.attach(this)
     }
 
-    private fun injectDependency() {
+    override fun injectDependency() {
 
         val baseApplication = applicationContext as BaseApplication
 
@@ -46,11 +43,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             .build()
 
         activityComponent.inject(this)
+
     }
 
-    override fun onDestroy() {
-        presenter.detach()
-        super.onDestroy()
+    override fun initPresenter() {
+        presenter = mainPresenter
     }
 
     override fun addListData(list: List<Pair<String, Int>>) {
@@ -78,4 +75,5 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun showError(t: Throwable) {
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }
+
 }

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import com.godeltech.simpleapp.repository.DataRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import okio.BufferedSource
@@ -15,23 +15,27 @@ class MainInteractor(var presenter: MainPresenter, private var dataRepository: D
     lateinit var url: String
     private val wordsMap: HashMap<String, Int> = hashMapOf()
 
-    lateinit var disposable: Disposable
-
-    fun unsubscribe(){
-        if(::disposable.isInitialized)
-            disposable.dispose()
-    }
+    private val disposables = CompositeDisposable()
 
     @SuppressLint("CheckResult")
     fun requestData() {
 
-        disposable = dataRepository.getTextFile(url)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
-            .doOnComplete { presenter.onGetDataSuccess(mapToSortedList(wordsMap)) }
-            .doOnError { error -> presenter.onGetDataError(error) }
-            .subscribe { text: String -> onSubDataReceived(text, wordsMap) }
+        disposables.add(
+            dataRepository.getTextFile(url)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
+                .doOnComplete {
+                    presenter.onGetDataSuccess(mapToSortedList(wordsMap))
+                    disposables.clear()
+                }
+                .doOnError { error ->
+                    presenter.onGetDataError(error)
+                    disposables.clear()
+                }
+                .subscribe { text: String ->
+                    onSubDataReceived(text, wordsMap)
+                })
 
     }
 
@@ -80,4 +84,17 @@ class MainInteractor(var presenter: MainPresenter, private var dataRepository: D
                 }
             }
     }
+
+    fun getCachedData(): List<Pair<String, Int>> {
+        return mapToSortedList(wordsMap)
+    }
+
+    fun isOperationActive(): Boolean {
+        return disposables.size() > 0
+    }
+
+    fun unsubscribe() {
+        disposables.dispose()
+    }
+
 }
