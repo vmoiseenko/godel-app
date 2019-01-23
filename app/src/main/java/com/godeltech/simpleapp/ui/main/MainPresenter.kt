@@ -8,12 +8,12 @@ import com.godeltech.simpleapp.repository.DataRepository
 import com.godeltech.simpleapp.ui.base.BasePresenter
 
 class MainPresenter(private val dataRepository: DataRepository) : BasePresenter<MainContract.View>(),
-    MainContract.Presenter {
+    MainContract.Presenter, MainInteractor.ActionListener {
 
     private lateinit var interactor: MainInteractor
 
     override fun attachView(view: MainContract.View) {
-        this.view = view
+        super.attachView(view)
         if (!::interactor.isInitialized) {
             interactor = MainInteractor(this, dataRepository)
         }
@@ -35,14 +35,14 @@ class MainPresenter(private val dataRepository: DataRepository) : BasePresenter<
         interactor.requestData()
     }
 
-    fun onGetDataSuccess(wordGroups: List<Pair<String, Int>>) {
+    override fun onGetDataSuccess(list: List<Pair<String, Int>>) {
         onProgressHide()
-        view?.addListData(wordGroups)
+        view?.addListData(list)
     }
 
-    fun onGetDataError(error: Throwable) {
+    override fun onGetDataError(t: Throwable) {
         onProgressHide()
-        view?.showError(error)
+        view?.showError(t)
     }
 
     private fun isUrlValid(url: String): Boolean {
@@ -69,7 +69,6 @@ class MainPresenter(private val dataRepository: DataRepository) : BasePresenter<
         }
         Log.d("TEST", "Lifecycle.Event.ON_CREATE interactor.isOperationActive() " + interactor.isOperationActive())
         if (interactor.isOperationActive()) onProgressShow()
-
     }
 
 

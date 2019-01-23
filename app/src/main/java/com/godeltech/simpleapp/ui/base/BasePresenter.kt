@@ -9,6 +9,7 @@ open class BasePresenter<V : BaseContract.View> : LifecycleObserver, BaseContrac
 
     var view: V? = null
 
+    @CallSuper
     override fun attachView(view: V) {
         this.view = view
     }

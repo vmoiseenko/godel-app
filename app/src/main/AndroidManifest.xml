@@ -5,26 +5,27 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:name=".BaseApplication"
-        >
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.splash.SplashActivity"
+            android:screenOrientation="sensor"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity"
-            android:screenOrientation="sensor"
-            />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="sensor" />
     </application>
 
 </manifest>

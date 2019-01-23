@@ -10,7 +10,7 @@ import okhttp3.ResponseBody
 import okio.BufferedSource
 import java.io.IOException
 
-class MainInteractor(var presenter: MainPresenter, private var dataRepository: DataRepository) {
+class MainInteractor(var listener: ActionListener, private var dataRepository: DataRepository) {
 
     lateinit var url: String
     private val wordsMap: HashMap<String, Int> = hashMapOf()
@@ -26,11 +26,11 @@ class MainInteractor(var presenter: MainPresenter, private var dataRepository: D
                 .subscribeOn(Schedulers.io())
                 .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
                 .doOnComplete {
-                    presenter.onGetDataSuccess(mapToSortedList(wordsMap))
+                    listener.onGetDataSuccess(mapToSortedList(wordsMap))
                     disposables.clear()
                 }
                 .doOnError { error ->
-                    presenter.onGetDataError(error)
+                    listener.onGetDataError(error)
                     disposables.clear()
                 }
                 .subscribe { text: String ->
@@ -95,6 +95,11 @@ class MainInteractor(var presenter: MainPresenter, private var dataRepository: D
 
     fun unsubscribe() {
         disposables.dispose()
+    }
+
+    interface ActionListener {
+        fun onGetDataSuccess(list: List<Pair<String, Int>>)
+        fun onGetDataError(t: Throwable)
     }
 
 }
