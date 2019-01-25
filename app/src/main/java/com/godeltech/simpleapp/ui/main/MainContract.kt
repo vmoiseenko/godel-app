@@ -1,6 +1,7 @@
 package com.godeltech.simpleapp.ui.main
 
 import com.godeltech.simpleapp.ui.base.BaseContract
+import com.godeltech.simpleapp.utils.Validator
 
 class MainContract {
 

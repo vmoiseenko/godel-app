@@ -19,7 +19,9 @@
             android:id="@+id/urlField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textWebEditText" />
+            android:inputType="textWebEditText"
+            android:text="https://tut.by"
+            />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -28,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/main.action_button_text"
         app:layout_constraintLeft_toLeftOf="@id/textInputUrl"
         app:layout_constraintTop_toBottomOf="@id/textInputUrl" />

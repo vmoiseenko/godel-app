@@ -3,50 +3,47 @@ package com.godeltech.simpleapp.ui.main
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
 import android.util.Log
-import android.util.Patterns
-import com.godeltech.simpleapp.repository.DataRepository
 import com.godeltech.simpleapp.ui.base.BasePresenter
+import com.godeltech.simpleapp.utils.Validator
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 
-class MainPresenter(private val dataRepository: DataRepository) : BasePresenter<MainContract.View>(),
-    MainContract.Presenter, MainInteractor.ActionListener {
 
-    private lateinit var interactor: MainInteractor
+class MainPresenter(private var interactor: MainInteractor, var validator: Validator) : BasePresenter<MainContract.View>(),
+    MainContract.Presenter {
 
-    override fun attachView(view: MainContract.View) {
-        super.attachView(view)
-        if (!::interactor.isInitialized) {
-            interactor = MainInteractor(this, dataRepository)
-        }
-    }
+    private val disposables = CompositeDisposable()
 
     override fun detachView() {
         super.detachView()
-        interactor.unsubscribe()
+        disposables.dispose()
     }
 
     override fun onUrlTextChanged(url: String) {
-        if (interactor.isOperationActive()) return
-        view?.setActionButtonEnabled(isUrlValid(url))
-        interactor.url = url
+        if (isHasSubscriptions()) return
+        view?.setActionButtonEnabled(validator.isUrlValid(url))
+        interactor.setUrl(url)
     }
 
     override fun onActionButtonClick() {
         onProgressShow()
-        interactor.requestData()
+        disposables.add(
+            interactor.requestData()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { onGetDataSuccess(it) }
+                .doOnError { onGetDataError(it) }
+                .doOnComplete { disposables.clear() }
+                .subscribe())
     }
 
-    override fun onGetDataSuccess(list: List<Pair<String, Int>>) {
+    private fun onGetDataSuccess(data: List<Pair<String, Int>>) {
         onProgressHide()
-        view?.addListData(list)
+        view?.addListData(data)
     }
 
-    override fun onGetDataError(t: Throwable) {
+    private fun onGetDataError(t: Throwable) {
         onProgressHide()
         view?.showError(t)
-    }
-
-    private fun isUrlValid(url: String): Boolean {
-        return Patterns.WEB_URL.matcher(url).matches()
     }
 
     private fun onProgressShow() {
@@ -63,13 +60,14 @@ class MainPresenter(private val dataRepository: DataRepository) : BasePresenter<
 
     @OnLifecycleEvent(value = Lifecycle.Event.ON_CREATE)
     private fun onCreate() {
-        Log.d("TEST", "Lifecycle.Event.ON_CREATE ::interactor.isInitialized " + ::interactor.isInitialized)
-        if (::interactor.isInitialized) {
+        Log.d("TEST", "Lifecycle.Event.ON_CREATE isHasSubscriptions " + isHasSubscriptions())
+        if (isHasSubscriptions()) {
+            onProgressShow()
+        } else {
             view?.addListData(interactor.getCachedData())
         }
-        Log.d("TEST", "Lifecycle.Event.ON_CREATE interactor.isOperationActive() " + interactor.isOperationActive())
-        if (interactor.isOperationActive()) onProgressShow()
     }
 
+    private fun isHasSubscriptions() = disposables.size() > 0
 
 }

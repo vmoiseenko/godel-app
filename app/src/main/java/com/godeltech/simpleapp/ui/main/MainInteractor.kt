@@ -1,42 +1,35 @@
 package com.godeltech.simpleapp.ui.main
 
-import android.annotation.SuppressLint
 import com.godeltech.simpleapp.repository.DataRepository
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.ObservableSource
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import okio.BufferedSource
-import java.io.IOException
 
-class MainInteractor(var listener: ActionListener, private var dataRepository: DataRepository) {
+open class MainInteractor(var dataRepository: DataRepository) {
 
-    lateinit var url: String
+    private lateinit var url: String
+
     private val wordsMap: HashMap<String, Int> = hashMapOf()
 
-    private val disposables = CompositeDisposable()
-
-    @SuppressLint("CheckResult")
-    fun requestData() {
-
-        disposables.add(
-            dataRepository.getTextFile(url)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
-                .doOnComplete {
-                    listener.onGetDataSuccess(mapToSortedList(wordsMap))
-                    disposables.clear()
+    fun requestData(): Observable<List<Pair<String, Int>>> {
+        return dataRepository.getTextFile(url)
+            .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) } //Show that call was success
+            .doOnNext { onSubDataReceived(it, wordsMap) }
+            .doOnError {
+                ObservableSource<List<Pair<String, Int>>> { observer ->
+                    observer.onError(it)
                 }
-                .doOnError { error ->
-                    listener.onGetDataError(error)
-                    disposables.clear()
+            }
+            .lastElement()
+            .flatMapObservable {
+                ObservableSource<List<Pair<String, Int>>> { observer ->
+                    observer.onNext(mapToSortedList(wordsMap))
+                    observer.onComplete()
                 }
-                .subscribe { text: String ->
-                    onSubDataReceived(text, wordsMap)
-                })
-
+            }
+            .subscribeOn(Schedulers.io())
     }
 
     private fun onSubDataReceived(text: String, wordsMap: HashMap<String, Int>): HashMap<String, Int> {
@@ -78,7 +71,7 @@ class MainInteractor(var listener: ActionListener, private var dataRepository: D
                     }
                     emitter.onComplete()
 
-                } catch (e: IOException) {
+                } catch (e: Exception) {
                     e.printStackTrace()
                     emitter.onError(e)
                 }
@@ -89,17 +82,8 @@ class MainInteractor(var listener: ActionListener, private var dataRepository: D
         return mapToSortedList(wordsMap)
     }
 
-    fun isOperationActive(): Boolean {
-        return disposables.size() > 0
-    }
-
-    fun unsubscribe() {
-        disposables.dispose()
-    }
-
-    interface ActionListener {
-        fun onGetDataSuccess(list: List<Pair<String, Int>>)
-        fun onGetDataError(t: Throwable)
+    fun setUrl(url:String){
+        this.url = url
     }
 
 }

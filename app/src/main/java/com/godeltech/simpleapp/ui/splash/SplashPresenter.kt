@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Presenter {
 
-    private val splashDelay: Long = 5
+    private val splashDelay: Long = 0
     private val disposables = CompositeDisposable()
     private var isAlive = true
 
