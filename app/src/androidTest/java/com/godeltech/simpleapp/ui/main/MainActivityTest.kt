@@ -1,12 +1,13 @@
-package com.godeltech.simpleapp.ui.splash
+package com.godeltech.simpleapp.ui.main
 
 
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.ViewAssertion
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions
+import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
-import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -50,11 +51,15 @@ class MainActivityTest {
                 isDisplayed()
             )
         )
-        textInputEditText.perform(replaceText("https://tut.by"), closeSoftKeyboard())
+        textInputEditText.perform(typeText("https://tut.by"), closeSoftKeyboard())
 
         onView(withId(R.id.actionButton)).perform(click())
 
-        onView(withId(R.id.progress)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Thread.sleep(100)
+        onView(withId(R.id.urlField)).check(matches(isEnabled()))
+        onView(withId(R.id.actionButton)).check(matches(isEnabled()))
+
+        onView(withId(R.id.progress)).check(matches(isDisplayed()))
 
         Thread.sleep(5000)
 
