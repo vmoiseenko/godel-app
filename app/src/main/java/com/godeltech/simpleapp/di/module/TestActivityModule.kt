@@ -1,4 +1,6 @@
 package com.godeltech.simpleapp.di.module
 
-interface TestActivityModule {
-}
+import dagger.Module
+
+@Module
+interface TestActivityModule
