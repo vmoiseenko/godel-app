@@ -9,7 +9,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 
-class MainPresenter(private var interactor: MainInteractor, var validator: Validator) : BasePresenter<MainContract.View>(),
+class MainPresenter(private var interactor: MainInteractor, var validator: Validator) :
+    BasePresenter<MainContract.View>(),
     MainContract.Presenter {
 
     private val disposables = CompositeDisposable()
@@ -21,29 +22,28 @@ class MainPresenter(private var interactor: MainInteractor, var validator: Valid
 
     override fun onUrlTextChanged(url: String) {
         if (isHasSubscriptions()) return
-        view?.setActionButtonEnabled(validator.isUrlValid(url))
-        interactor.setUrl(url)
+        if (validator.isUrlValid(url)) {
+            view?.setActionButtonEnabled(true)
+            interactor.setUrl(url)
+        } else {
+            view?.setActionButtonEnabled(false)
+        }
     }
 
     override fun onActionButtonClick() {
-        onProgressShow()
         disposables.add(
             interactor.requestData()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { onGetDataSuccess(it) }
-                .doOnError { onGetDataError(it) }
-                .doOnComplete { disposables.clear() }
-                .subscribe())
-    }
-
-    private fun onGetDataSuccess(data: List<Pair<String, Int>>) {
-        onProgressHide()
-        view?.addListData(data)
-    }
-
-    private fun onGetDataError(t: Throwable) {
-        onProgressHide()
-        view?.showError(t)
+                .doOnSubscribe { onProgressShow() }
+                .doOnTerminate {
+                    disposables.clear()
+                    onProgressHide()
+                }
+                .subscribe(
+                    { view?.addListData(it) },
+                    { view?.showError(it) }
+                )
+        )
     }
 
     private fun onProgressShow() {

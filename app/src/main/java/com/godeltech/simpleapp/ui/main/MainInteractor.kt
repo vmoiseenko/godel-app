@@ -30,6 +30,9 @@ open class MainInteractor(var dataRepository: DataRepository) {
                 }
             }
             .subscribeOn(Schedulers.io())
+            .doOnError{ObservableSource<List<Pair<String, Int>>> { observer ->
+                observer.onError(it)
+            }}
     }
 
     private fun onSubDataReceived(text: String, wordsMap: HashMap<String, Int>): HashMap<String, Int> {
@@ -73,7 +76,7 @@ open class MainInteractor(var dataRepository: DataRepository) {
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    emitter.onError(e)
+                    emitter.tryOnError(e)
                 }
             }
     }
