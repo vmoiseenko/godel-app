@@ -4,4 +4,4 @@ import javax.inject.Scope
 
 @Scope
 @Retention(value = AnnotationRetention.SOURCE)
-annotation class ActivityScope
+annotation class PresenterScope
