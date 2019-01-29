@@ -11,9 +11,8 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Presenter {
+class SplashPresenter(private val splashDelay: Long) : BasePresenter<SplashContract.View>(), SplashContract.Presenter {
 
-    private val splashDelay: Long = 0
     private val disposables = CompositeDisposable()
     private var isAlive = true
 
@@ -21,7 +20,6 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
         super.detachView()
         disposables.clear()
     }
-
 
     @OnLifecycleEvent(value = Lifecycle.Event.ON_START)
     fun runApp() {
@@ -52,16 +50,9 @@ class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Pre
     fun getSubscriber(): DisposableObserver<Long> {
 
         return object : DisposableObserver<Long>() {
-            override fun onNext(t: Long) {
-                Log.d("TEST", javaClass.name + " DisposableObserver " + t.toString())
-            }
-
-            override fun onStart() {
-                Log.d("TEST", javaClass.name + " " + "DisposableObserverStart!")
-            }
+            override fun onNext(t: Long) {}
 
             override fun onError(t: Throwable) {
-                Log.e("TEST", javaClass.name + " DisposableObserver " + t.toString())
                 disposables.clear()
             }
 

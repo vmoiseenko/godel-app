@@ -3,4 +3,7 @@
     <string name="main.url_hint">Enter url</string>
     <string name="main.action_button_text">Start action</string>
     <string name="title_activity_splash">SplashActivity</string>
+
+    <integer name="splash_delay">5</integer>
+
 </resources>

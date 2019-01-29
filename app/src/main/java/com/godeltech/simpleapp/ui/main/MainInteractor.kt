@@ -15,7 +15,7 @@ open class MainInteractor(var dataRepository: DataRepository) {
 
     fun requestData(): Observable<List<Pair<String, Int>>> {
         return dataRepository.getTextFile(url)
-            .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) } //Show that call was success
+            .flatMap { responseBody: ResponseBody -> readStream(responseBody.source()) }
             .doOnNext { onSubDataReceived(it, wordsMap) }
             .doOnError {
                 ObservableSource<List<Pair<String, Int>>> { observer ->
