@@ -8,11 +8,11 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+open class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    open fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl("https://google.com/")
@@ -20,7 +20,7 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideNetworkService(retrofit: Retrofit): NetworkService {
+    open fun provideNetworkService(retrofit: Retrofit): NetworkService {
         return retrofit.create(NetworkService::class.java)
     }
 
