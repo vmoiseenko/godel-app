@@ -2,19 +2,16 @@ package com.godeltech.simpleapp.ui.base
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
-import android.support.annotation.CallSuper
 import android.util.Log
 
 open class BasePresenter<V : BaseContract.View> : LifecycleObserver, BaseContract.Presenter<V> {
 
     var view: V? = null
 
-    @CallSuper
     override fun attachView(view: V) {
         this.view = view
     }
 
-    @CallSuper
     override fun detachView() {
         Log.d("TEST", this.javaClass.name + " detachView()")
         view = null
@@ -26,5 +23,9 @@ open class BasePresenter<V : BaseContract.View> : LifecycleObserver, BaseContrac
 
     override fun detachLifecycle(lifecycle: Lifecycle) {
         lifecycle.removeObserver(this)
+    }
+
+    override fun destroy() {
+
     }
 }

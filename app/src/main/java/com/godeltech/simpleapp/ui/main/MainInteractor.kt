@@ -6,8 +6,9 @@ import io.reactivex.ObservableSource
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import okio.BufferedSource
+import javax.inject.Inject
 
-open class MainInteractor(var dataRepository: DataRepository) {
+open class MainInteractor @Inject constructor(private val dataRepository: DataRepository) {
 
     private lateinit var url: String
 
@@ -30,9 +31,11 @@ open class MainInteractor(var dataRepository: DataRepository) {
                 }
             }
             .subscribeOn(Schedulers.io())
-            .doOnError{ObservableSource<List<Pair<String, Int>>> { observer ->
-                observer.onError(it)
-            }}
+            .doOnError {
+                ObservableSource<List<Pair<String, Int>>> { observer ->
+                    observer.onError(it)
+                }
+            }
     }
 
     private fun onSubDataReceived(text: String, wordsMap: HashMap<String, Int>): HashMap<String, Int> {
@@ -85,7 +88,7 @@ open class MainInteractor(var dataRepository: DataRepository) {
         return mapToSortedList(wordsMap)
     }
 
-    fun setUrl(url:String){
+    fun setUrl(url: String) {
         this.url = url
     }
 

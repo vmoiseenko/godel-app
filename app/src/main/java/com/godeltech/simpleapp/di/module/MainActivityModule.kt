@@ -1,21 +1,22 @@
 package com.godeltech.simpleapp.di.module
 
-import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
 import android.util.Patterns
-import com.godeltech.simpleapp.repository.DataRepository
+import com.godeltech.simpleapp.ui.base.HasPresenterViewModel
+import com.godeltech.simpleapp.ui.main.MainActivity
 import com.godeltech.simpleapp.ui.main.MainContract
-import com.godeltech.simpleapp.ui.main.MainInteractor
 import com.godeltech.simpleapp.ui.main.MainPresenter
 import com.godeltech.simpleapp.utils.Validator
 import dagger.Module
 import dagger.Provides
+import javax.inject.Provider
 
 @Module
-class MainActivityModule(private var activity: Activity) {
+class MainActivityModule(private var mainActivity: MainActivity) {
 
     @Provides
-    fun provideValidator(): Validator{
-        return object : Validator{
+    fun provideValidator(): Validator {
+        return object : Validator {
             override fun isUrlValid(url: String): Boolean {
                 return Patterns.WEB_URL.matcher(url).matches()
             }
@@ -23,18 +24,10 @@ class MainActivityModule(private var activity: Activity) {
     }
 
     @Provides
-    fun provideInteractor(dataRepository: DataRepository): MainInteractor{
-        return MainInteractor(dataRepository)
+    fun providePresenter(mainPresenterProvider: Provider<MainPresenter>): MainContract.Presenter {
+        return ViewModelProviders
+            .of(mainActivity, HasPresenterViewModel.Factory(mainPresenterProvider::get))
+            .get(HasPresenterViewModel::class.java)
+            .presenter as MainContract.Presenter
     }
-
-    @Provides
-    fun providePresenter(interactor: MainInteractor, validator: Validator): MainContract.Presenter {
-        return MainPresenter(interactor, validator)
-    }
-
-    @Provides
-    fun provideActivity(): Activity {
-        return activity
-    }
-
 }

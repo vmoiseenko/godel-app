@@ -13,7 +13,7 @@ import com.godeltech.simpleapp.utils.SimpleTextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), MainContract.View {
+class MainActivity : BaseActivity(), MainContract.View {
 
     @Inject
     lateinit var mainPresenter: MainContract.Presenter
@@ -26,11 +26,18 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
 
         urlField.addTextChangedListener(object : SimpleTextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                presenter.onUrlTextChanged(s.toString())
+                mainPresenter.onUrlTextChanged(s.toString())
             }
         })
 
-        actionButton.setOnClickListener { presenter.onActionButtonClick() }
+        actionButton.setOnClickListener { mainPresenter.onActionButtonClick() }
+
+        mainPresenter.attachView(this)
+    }
+
+    override fun onDestroy() {
+        mainPresenter.detachView()
+        super.onDestroy()
     }
 
     override fun injectDependency() {
@@ -44,10 +51,6 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
 
         activityComponent.inject(this)
 
-    }
-
-    override fun initPresenter() {
-        presenter = mainPresenter
     }
 
     override fun addListData(list: List<Pair<String, Int>>) {
@@ -75,5 +78,4 @@ class MainActivity : BaseActivity<MainContract.View, MainContract.Presenter>(), 
     override fun showError(t: Throwable) {
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }
-
 }

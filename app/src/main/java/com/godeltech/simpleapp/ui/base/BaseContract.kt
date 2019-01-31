@@ -11,6 +11,7 @@ class BaseContract {
         fun detachView()
         fun attachLifecycle(lifecycle: Lifecycle)
         fun detachLifecycle(lifecycle: Lifecycle)
+        fun destroy()
     }
 
 }

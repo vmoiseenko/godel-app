@@ -7,9 +7,9 @@ import com.godeltech.simpleapp.ui.base.BasePresenter
 import com.godeltech.simpleapp.utils.Validator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
-
-class MainPresenter(private var interactor: MainInteractor, var validator: Validator) :
+class MainPresenter @Inject constructor(private var interactor: MainInteractor, var validator: Validator) :
     BasePresenter<MainContract.View>(),
     MainContract.Presenter {
 
