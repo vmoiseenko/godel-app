@@ -1,7 +1,6 @@
-package com.godeltech.simpleapp.ui.main
+package com.godeltech.simpleapp.network
 
 import com.godeltech.simpleapp.di.module.NetworkModule
-import com.godeltech.simpleapp.network.NetworkService
 import dagger.Module
 import javax.inject.Singleton
 import dagger.Provides

@@ -1,26 +1,21 @@
 package com.godeltech.simpleapp.ui.main
 
-
-import android.content.Intent
-import android.os.SystemClock
-import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import com.godeltech.simpleapp.BaseApplication
 import com.godeltech.simpleapp.R
-import com.godeltech.simpleapp.di.component.DaggerAppComponent
-import com.godeltech.simpleapp.di.module.*
+import com.godeltech.simpleapp.utils.RecyclerViewMatcher
+import com.godeltech.simpleapp.utils.RecyclerViewMatcher.Companion.withItemCount
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -32,23 +27,6 @@ class MainActivityTest {
 
     @Before
     fun setUp() {
-
-        val instrumentation= InstrumentationRegistry.getInstrumentation()
-
-        val app = instrumentation.targetContext.applicationContext as BaseApplication
-
-        val component = DaggerAppComponent.builder()
-            .appModule(AppModule(app))
-            .networkModule(MockNetworkModule())
-            .dataModule(DataModule())
-            .build()
-
-        app.component = component
-
-//        val intent = Intent(InstrumentationRegistry.getInstrumentation()
-//            .targetContext, MainActivity::class.java)
-
-//        mActivityTestRule.launchActivity(intent)
     }
 
     @Test
@@ -58,12 +36,8 @@ class MainActivityTest {
         onView(withId(R.id.actionButton)).check(matches(not(isEnabled())))
         onView(withId(R.id.progress)).check(matches(not(isDisplayed())))
 
-        onView(withId(R.id.urlField)).perform(typeText("https://tut.by"), closeSoftKeyboard())
-        onView(withId(R.id.actionButton)).perform(click())
-
-        onView(withId(R.id.urlField)).check(matches(not(isEnabled())))
-        onView(withId(R.id.actionButton)).check(matches(not(isEnabled())))
-        onView(withId(R.id.progress)).check(matches(isDisplayed()))
+        onView(withId(R.id.urlField)).perform(typeText("https://godel.tech"), closeSoftKeyboard())
+        onView(withId(R.id.actionButton)).check(matches(isEnabled()))
 
     }
 
@@ -74,7 +48,7 @@ class MainActivityTest {
         onView(withId(R.id.actionButton)).check(matches(not(isEnabled())))
         onView(withId(R.id.progress)).check(matches(not(isDisplayed())))
 
-        onView(withId(R.id.urlField)).perform(typeText("https://tut"), closeSoftKeyboard())
+        onView(withId(R.id.urlField)).perform(typeText("https://godel"), closeSoftKeyboard())
 
         onView(withId(R.id.actionButton)).check(matches(not(isEnabled())))
 
@@ -83,18 +57,17 @@ class MainActivityTest {
     @Test
     fun mainActivityTestValidResult() {
 
-        onView(withId(R.id.urlField)).perform(typeText("https://tut.by"), closeSoftKeyboard())
+        onView(withId(R.id.urlField)).perform(typeText("https://godel.tech"), closeSoftKeyboard())
         onView(withId(R.id.actionButton)).perform(click())
 
-        onView(withId(R.id.urlField)).check(matches(not(isEnabled())))
-        onView(withId(R.id.actionButton)).check(matches(not(isEnabled())))
-        onView(withId(R.id.progress)).check(matches(isDisplayed()))
+        onView(withId(R.id.resultListRecycler)).check(matches(isDisplayed()))
 
-        SystemClock.sleep(5000)
+        onView(withId(R.id.resultListRecycler)).check(matches(withItemCount(5)))
+        onView(listMatcher().atPosition(0)).check(matches(hasDescendant(withText("file"))))
+    }
 
-        onView(withId(R.id.resultListRecycler)).perform(RecyclerViewActions.scrollToPosition<>(50))
-
-
+    private fun listMatcher(): RecyclerViewMatcher {
+        return RecyclerViewMatcher(R.id.resultListRecycler)
     }
 
 }

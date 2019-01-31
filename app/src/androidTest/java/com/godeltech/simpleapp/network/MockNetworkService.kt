@@ -1,5 +1,6 @@
 package com.godeltech.simpleapp.network
 
+import com.godeltech.simpleapp.network.NetworkService
 import io.reactivex.Observable
 import okhttp3.MediaType
 import okhttp3.ResponseBody
