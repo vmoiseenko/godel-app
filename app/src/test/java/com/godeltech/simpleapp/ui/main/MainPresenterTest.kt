@@ -53,17 +53,6 @@ class MainPresenterTest {
     }
 
     @Test
-    fun attachView() {
-        MatcherAssert.assertThat(presenter.view, CoreMatchers.notNullValue())
-    }
-
-    @Test
-    fun detachView() {
-        presenter.detachView()
-        MatcherAssert.assertThat(presenter.view, CoreMatchers.nullValue())
-    }
-
-    @Test
     fun onInvalidUrlVerifyViewDisabled() {
         Mockito.`when`(validator.isUrlValid(Matchers.anyString())).thenReturn(false)
         presenter.onUrlTextChanged(invalidUrl)

@@ -1,20 +1,26 @@
 package com.godeltech.simpleapp.ui.splash
 
 import io.github.plastix.rxschedulerrule.RxSchedulerRule
-import io.reactivex.observers.TestObserver
 import org.junit.Before
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Rule
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import java.util.concurrent.TimeUnit
+import android.support.test.espresso.intent.Intents.*
+import android.support.test.espresso.intent.matcher.IntentMatchers.toPackage
+import android.support.test.espresso.intent.rule.IntentsTestRule
+import org.hamcrest.CoreMatchers.allOf
 
 class SplashPresenterTest {
 
     @get:Rule
     val rxSchRule = RxSchedulerRule()
+
+    @get:Rule
+    val testIntent = IntentsTestRule(SplashActivity::class.java)
 
     @Mock
     lateinit var view: SplashContract.View
@@ -24,26 +30,18 @@ class SplashPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        presenter = SplashPresenter(0)
+        presenter = SplashPresenter(SplashDelay(1, TimeUnit.SECONDS))
         presenter.attachView(view)
     }
 
     @Test
-    fun detachView() {
-        presenter.detachView()
-        assertNull(presenter.view)
-    }
-
-    @Test
     fun testRunApp() {
-        presenter.runApp()
         Mockito.verify(view).launchApp()
     }
 
-//    @Test
-//    fun testSubscriber() {
-//        val observer = TestObserver.create<Any>()
-//        observer.onSubscribe(presenter.getSubscriber())
-//        observer.assertComplete()
-//    }
+    @Test
+    fun testRunIntent() {
+        intended(allOf(toPackage(SplashActivity::class.java.name)))
+    }
+
 }
