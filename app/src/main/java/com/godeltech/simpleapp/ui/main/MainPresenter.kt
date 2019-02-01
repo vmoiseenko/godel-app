@@ -1,8 +1,5 @@
 package com.godeltech.simpleapp.ui.main
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
-import android.util.Log
 import com.godeltech.simpleapp.ui.base.BasePresenter
 import com.godeltech.simpleapp.utils.Validator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,14 +11,20 @@ class MainPresenter @Inject constructor(private var interactor: MainInteractor, 
     MainContract.Presenter {
 
     private val disposables = CompositeDisposable()
+    private var isDataLoading = false
 
-    override fun detachView() {
-        super.detachView()
-        disposables.dispose()
+    override fun attachView(view: MainContract.View) {
+        super.attachView(view)
+
+        if (isDataLoading) {
+            onProgressShow()
+        } else {
+            view.addListData(interactor.getCachedData())
+        }
     }
 
     override fun onUrlTextChanged(url: String) {
-        if (isHasSubscriptions()) return
+        if (isDataLoading) return
         if (validator.isUrlValid(url)) {
             view?.setActionButtonEnabled(true)
             interactor.setUrl(url)
@@ -34,9 +37,12 @@ class MainPresenter @Inject constructor(private var interactor: MainInteractor, 
         disposables.add(
             interactor.requestData()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onProgressShow() }
+                .doOnSubscribe {
+                    isDataLoading = true
+                    onProgressShow()
+                }
                 .doOnTerminate {
-                    disposables.clear()
+                    isDataLoading = false
                     onProgressHide()
                 }
                 .subscribe(
@@ -58,16 +64,8 @@ class MainPresenter @Inject constructor(private var interactor: MainInteractor, 
         view?.setActionButtonEnabled(true)
     }
 
-    @OnLifecycleEvent(value = Lifecycle.Event.ON_CREATE)
-    private fun onCreate() {
-        Log.d("TEST", "Lifecycle.Event.ON_CREATE isHasSubscriptions " + isHasSubscriptions())
-        if (isHasSubscriptions()) {
-            onProgressShow()
-        } else {
-            view?.addListData(interactor.getCachedData())
-        }
+    override fun destroy() {
+        disposables.dispose()
     }
-
-    private fun isHasSubscriptions() = disposables.size() > 0
 
 }

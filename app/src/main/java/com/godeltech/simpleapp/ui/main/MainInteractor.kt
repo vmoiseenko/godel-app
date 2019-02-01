@@ -36,6 +36,7 @@ class MainInteractor @Inject constructor(private val dataRepository: DataReposit
                     observer.onError(it)
                 }
             }
+            .cache()
     }
 
     private fun onSubDataReceived(text: String, wordsMap: HashMap<String, Int>): HashMap<String, Int> {
