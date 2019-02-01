@@ -8,7 +8,7 @@ import okhttp3.ResponseBody
 import okio.BufferedSource
 import javax.inject.Inject
 
-open class MainInteractor @Inject constructor(private val dataRepository: DataRepository) {
+class MainInteractor @Inject constructor(private val dataRepository: DataRepository) {
 
     private lateinit var url: String
 
