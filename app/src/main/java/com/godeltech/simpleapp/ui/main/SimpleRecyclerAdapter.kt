@@ -1,6 +1,6 @@
 package com.godeltech.simpleapp.ui.main
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +9,9 @@ import com.godeltech.simpleapp.R
 
 class SimpleRecyclerAdapter(val data: ArrayList<Pair<String, Int>> = mutableListOf<ArrayList<Pair<String, Int>>>() as ArrayList<Pair<String, Int>>) :
 
-    RecyclerView.Adapter<SimpleRecyclerAdapter.SimpleViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<SimpleRecyclerAdapter.SimpleViewHolder>() {
 
-    class SimpleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class SimpleViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         fun bindData(pair: Pair<String, Int>) {
             itemView.findViewById<TextView>(R.id.title).text = pair.first

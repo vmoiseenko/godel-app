@@ -17,8 +17,8 @@
 package com.godeltech.simpleapp.utils
 
 import android.content.res.Resources
-import android.support.test.espresso.matcher.BoundedMatcher
-import android.support.v7.widget.RecyclerView
+import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 import org.hamcrest.Description
@@ -33,12 +33,12 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
 
     companion object {
         fun withItemCount(count: Int): Matcher<View> {
-            return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
+            return object : BoundedMatcher<View, androidx.recyclerview.widget.RecyclerView>(androidx.recyclerview.widget.RecyclerView::class.java) {
                 override fun describeTo(description: Description?) {
                     description?.appendText("RecyclerView with item count: $count")
                 }
 
-                override fun matchesSafely(item: RecyclerView?): Boolean {
+                override fun matchesSafely(item: androidx.recyclerview.widget.RecyclerView?): Boolean {
                     return item?.adapter?.itemCount == count
                 }
             }
@@ -72,7 +72,7 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                 this.resources = view.resources
 
                 if (childView == null) {
-                    val recyclerView = view.rootView.findViewById<RecyclerView>(recyclerViewId)
+                    val recyclerView = view.rootView.findViewById<androidx.recyclerview.widget.RecyclerView>(recyclerViewId)
                     if (recyclerView?.id == recyclerViewId) {
                         val viewHolder = recyclerView.findViewHolderForAdapterPosition(position)
                         childView = viewHolder?.itemView

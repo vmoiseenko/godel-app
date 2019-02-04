@@ -1,10 +1,10 @@
 package com.godeltech.simpleapp.utils
 
-import android.support.test.espresso.IdlingResource.ResourceCallback
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitor
-import android.support.test.espresso.IdlingResource
-import android.support.test.runner.lifecycle.Stage
+import androidx.test.espresso.IdlingResource.ResourceCallback
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitor
+import androidx.test.espresso.IdlingResource
+import androidx.test.runner.lifecycle.Stage
 
 
 open class WaitActivityIsResumedIdlingResource(private val activityToWaitClassName: String) : IdlingResource {

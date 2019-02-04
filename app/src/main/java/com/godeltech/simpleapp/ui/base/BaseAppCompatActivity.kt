@@ -1,10 +1,10 @@
 package com.godeltech.simpleapp.ui.base
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.godeltech.simpleapp.BaseApplication
 import com.godeltech.simpleapp.di.component.AppComponent
 import com.godeltech.simpleapp.di.component.DaggerPresenterComponent

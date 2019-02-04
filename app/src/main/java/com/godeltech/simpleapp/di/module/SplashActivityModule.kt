@@ -1,6 +1,6 @@
 package com.godeltech.simpleapp.di.module
 
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.ui.base.HasPresenterViewModel

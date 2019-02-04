@@ -3,8 +3,6 @@ package com.godeltech.simpleapp.ui.main
 import com.godeltech.simpleapp.utils.Validator
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -16,8 +14,6 @@ import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 import io.github.plastix.rxschedulerrule.RxSchedulerRule
 import org.junit.Rule
-
-
 
 class MainPresenterTest {
 

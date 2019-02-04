@@ -1,7 +1,7 @@
 package com.godeltech.simpleapp.ui.base
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
 open class HasPresenterViewModel<out PRESENTER : BaseContract.Presenter<*>>(block: () -> PRESENTER) : ViewModel() {
 

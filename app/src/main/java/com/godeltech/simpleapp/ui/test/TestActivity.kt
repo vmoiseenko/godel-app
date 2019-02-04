@@ -1,7 +1,7 @@
 package com.godeltech.simpleapp.ui.test
 
 import android.annotation.SuppressLint
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.godeltech.simpleapp.di.component.DaggerTestComponent
 import com.godeltech.simpleapp.di.component.PresenterComponent
 import com.godeltech.simpleapp.ui.base.BaseAppCompatActivity

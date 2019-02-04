@@ -12,13 +12,14 @@ class MainPresenter @Inject constructor(private var interactor: MainInteractor, 
 
     private val disposables = CompositeDisposable()
     private var isDataLoading = false
+    private var isDataReady = false
 
     override fun attachView(view: MainContract.View) {
         super.attachView(view)
 
         if (isDataLoading) {
             onProgressShow()
-        } else {
+        } else if (isDataReady) {
             view.addListData(interactor.getCachedData())
         }
     }
@@ -46,8 +47,14 @@ class MainPresenter @Inject constructor(private var interactor: MainInteractor, 
                     onProgressHide()
                 }
                 .subscribe(
-                    { view?.addListData(it) },
-                    { view?.showError(it) }
+                    {
+                        isDataReady = true
+                        view?.addListData(it)
+                    },
+                    {
+                        isDataReady = false
+                        view?.showError(it)
+                    }
                 )
         )
     }

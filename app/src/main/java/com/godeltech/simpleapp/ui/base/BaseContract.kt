@@ -1,6 +1,6 @@
 package com.godeltech.simpleapp.ui.base
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 
 class BaseContract {
 
