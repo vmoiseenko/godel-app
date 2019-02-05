@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class MainPresenter @Inject constructor(private var interactor: MainInteractor, var validator: Validator) :
+class MainPresenter @Inject constructor(private var interactor: MainInteractor, private var validator: Validator) :
     BasePresenter<MainContract.View>(),
     MainContract.Presenter {
 

@@ -30,6 +30,12 @@ class MainActivityTest {
     }
 
     @Test
+    fun uiTextIsCorrect(){
+        onView(withId(R.id.actionButton)).check(matches(withText(getString(R.string.main_action_button_text))))
+        onView(withId(R.id.urlField)).check(matches(withHint(getString(R.string.main_url_hint))))
+    }
+
+    @Test
     fun mainActivityTestTypedValidUrl() {
 
         onView(withId(R.id.urlField)).check(matches(isEnabled()))
@@ -68,6 +74,10 @@ class MainActivityTest {
 
     private fun listMatcher(): RecyclerViewMatcher {
         return RecyclerViewMatcher(R.id.resultListRecycler)
+    }
+
+    private fun getString(id: Int): String{
+        return mActivityTestRule.activity.getString(id)
     }
 
 }

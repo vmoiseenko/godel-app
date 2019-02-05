@@ -12,6 +12,7 @@ buildscript {
     ext.rxjava2_version = '2.2.5'
     ext.rxandroid_version = '2.1.0'
     ext.rxkotlin_version = '2.3.0'
+    ext.rxbinding_version = '3.0.0-alpha2'
     ext.dagger2_version = '2.21'
     ext.android_arch_version = '1.1.1'
     ext.mockito_version = '2.22.0'

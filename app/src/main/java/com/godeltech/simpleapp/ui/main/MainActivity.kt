@@ -1,7 +1,7 @@
 package com.godeltech.simpleapp.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
 import android.view.View
 import android.widget.Toast
 import com.godeltech.simpleapp.BaseApplication
@@ -9,7 +9,8 @@ import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.di.component.DaggerMainActivityComponent
 import com.godeltech.simpleapp.di.module.MainActivityModule
 import com.godeltech.simpleapp.ui.base.BaseActivity
-import com.godeltech.simpleapp.utils.SimpleTextWatcher
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.textChanges
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -18,19 +19,20 @@ class MainActivity : BaseActivity(), MainContract.View {
     @Inject
     lateinit var mainPresenter: MainContract.Presenter
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         resultListRecycler.adapter = SimpleRecyclerAdapter()
 
-        urlField.addTextChangedListener(object : SimpleTextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                mainPresenter.onUrlTextChanged(s.toString())
-            }
-        })
+        urlField
+            .textChanges()
+            .subscribe { mainPresenter.onUrlTextChanged(it.toString()) }
 
-        actionButton.setOnClickListener { mainPresenter.onActionButtonClick() }
+        actionButton
+            .clicks()
+            .subscribe { mainPresenter.onActionButtonClick() }
 
         mainPresenter.attachView(this)
     }

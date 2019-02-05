@@ -11,7 +11,7 @@ class SimpleRecyclerAdapter(val data: ArrayList<Pair<String, Int>> = mutableList
 
     androidx.recyclerview.widget.RecyclerView.Adapter<SimpleRecyclerAdapter.SimpleViewHolder>() {
 
-    class SimpleViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    class SimpleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindData(pair: Pair<String, Int>) {
             itemView.findViewById<TextView>(R.id.title).text = pair.first
