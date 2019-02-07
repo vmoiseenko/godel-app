@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,18 +9,21 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputUrl"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="@string/main.url_hint"
+        android:hint="@string/main.url_label"
+        app:helperText="@string/main.url_helper_text"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/urlField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/main.url_hint"
             android:inputType="textWebEditText"
-        />
+            android:textColorHint="@drawable/text_input_hint_selector" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -33,7 +35,7 @@
         android:enabled="false"
         android:text="@string/main.action_button_text"
         app:layout_constraintLeft_toLeftOf="@id/textInputUrl"
-        app:layout_constraintTop_toBottomOf="@id/textInputUrl"/>
+        app:layout_constraintTop_toBottomOf="@id/textInputUrl" />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -43,7 +45,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/actionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/actionButton"
-        app:layout_constraintTop_toTopOf="@+id/actionButton"/>
+        app:layout_constraintTop_toTopOf="@+id/actionButton" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/resultListRecycler"
@@ -53,6 +55,6 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/actionButton"
-        app:spanCount="3"/>
+        app:spanCount="3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

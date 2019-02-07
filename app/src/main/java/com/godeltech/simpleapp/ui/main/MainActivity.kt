@@ -1,7 +1,10 @@
 package com.godeltech.simpleapp.ui.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.godeltech.simpleapp.BaseApplication
@@ -9,6 +12,7 @@ import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.di.component.DaggerMainActivityComponent
 import com.godeltech.simpleapp.di.module.MainActivityModule
 import com.godeltech.simpleapp.ui.base.BaseActivity
+import com.godeltech.simpleapp.ui.history.HistoryActivity
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.textChanges
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,6 +39,17 @@ class MainActivity : BaseActivity(), MainContract.View {
             .subscribe { mainPresenter.onActionButtonClick() }
 
         mainPresenter.attachView(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_scren_menu, menu)
+        return true
+    }
+
+    @SuppressLint("CheckResult")
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.itemId?.let { mainPresenter.onMenuItemClick(it) }
+        return true
     }
 
     override fun onDestroy() {
@@ -79,5 +94,10 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun showError(t: Throwable) {
         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun launchHistoryScreen() {
+        val intent = Intent(this, HistoryActivity::class.java)
+        startActivity(intent)
     }
 }

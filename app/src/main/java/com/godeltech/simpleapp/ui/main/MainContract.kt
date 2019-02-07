@@ -11,10 +11,12 @@ class MainContract {
         fun setActionButtonEnabled(isEnabled: Boolean)
         fun addListData(list: List<Pair<String, Int>>)
         fun showError(t: Throwable)
+        fun launchHistoryScreen()
     }
 
     interface Presenter : BaseContract.Presenter<MainContract.View> {
         fun onActionButtonClick()
+        fun onMenuItemClick(id: Int)
         fun onUrlTextChanged(url: String)
     }
 }

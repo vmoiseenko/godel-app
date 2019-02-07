@@ -26,6 +26,7 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:screenOrientation="sensor" />
+        <activity android:name=".ui.history.HistoryActivity"/>
     </application>
 
 </manifest>

@@ -1,14 +1,19 @@
 package com.godeltech.simpleapp.ui.main
 
+import com.godeltech.simpleapp.database.entity.History
 import com.godeltech.simpleapp.repository.DataRepository
+import com.godeltech.simpleapp.repository.DatabaseRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import okio.BufferedSource
+import java.util.*
 import javax.inject.Inject
 
-class MainInteractor @Inject constructor(private val dataRepository: DataRepository) {
+class MainInteractor @Inject constructor(
+    private val dataRepository: DataRepository,
+    private val databaseRepository: DatabaseRepository) {
 
     private lateinit var url: String
 
@@ -28,6 +33,7 @@ class MainInteractor @Inject constructor(private val dataRepository: DataReposit
                 ObservableSource<List<Pair<String, Int>>> { observer ->
                     observer.onNext(mapToSortedList(wordsMap))
                     observer.onComplete()
+                    databaseRepository.createRecordInDatabase(History(Calendar.getInstance().timeInMillis, url))
                 }
             }
             .subscribeOn(Schedulers.io())

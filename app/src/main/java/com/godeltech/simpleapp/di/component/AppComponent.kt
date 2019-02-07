@@ -1,6 +1,7 @@
 package com.godeltech.simpleapp.di.component
 
 import android.content.Context
+import com.godeltech.simpleapp.database.dao.HistoryDao
 import com.godeltech.simpleapp.di.module.AppModule
 import com.godeltech.simpleapp.di.module.DataModule
 import com.godeltech.simpleapp.di.module.NetworkModule
@@ -19,4 +20,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun networkService(): NetworkService
     fun context(): Context
+    fun historyDao(): HistoryDao
 }

@@ -1,5 +1,6 @@
 package com.godeltech.simpleapp.ui.main
 
+import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.ui.base.BasePresenter
 import com.godeltech.simpleapp.utils.Validator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -57,6 +58,12 @@ class MainPresenter @Inject constructor(private var interactor: MainInteractor, 
                     }
                 )
         )
+    }
+
+    override fun onMenuItemClick(id: Int) {
+        when (id) {
+            R.id.historyMenuItem -> view?.launchHistoryScreen()
+        }
     }
 
     private fun onProgressShow() {

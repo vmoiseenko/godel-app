@@ -1,5 +1,6 @@
 package com.godeltech.simpleapp.ui.main
 
+import com.godeltech.simpleapp.R
 import com.godeltech.simpleapp.utils.Validator
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -46,6 +47,12 @@ class MainPresenterTest {
         verifyNoMoreInteractions(validator)
         verifyNoMoreInteractions(interactor)
         verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun onHistoryMenuItemClick() {
+        presenter.onMenuItemClick(R.id.historyMenuItem)
+        verify(view).launchHistoryScreen()
     }
 
     @Test

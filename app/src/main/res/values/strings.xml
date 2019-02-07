@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">SimpleApp</string>
-    <string name="main.url_hint">Enter url</string>
+    <string name="main.url_label">Enter url</string>
+    <string name="main.url_hint">ex. https://godel.tech</string>
+    <string name="main.url_helper_text">Please type any URL address</string>
     <string name="main.action_button_text">Start action</string>
     <string name="title_activity_splash">SplashActivity</string>
 
